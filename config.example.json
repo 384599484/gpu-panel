@@ -1,0 +1,16 @@
+{
+  "listen": ":8080",
+  "token": "请把这里替换成随机字符串",
+  "panel_user": "",
+  "panel_pass": "",
+  "alerts": {
+    "offline_after_sec": 30,
+    "gpu_temp_threshold": 88,
+    "gpu_idle_threshold": 0,
+    "gpu_idle_after_sec": 600
+  },
+  "history": {
+    "interval_sec": 5,
+    "retention_points": 720
+  }
+}

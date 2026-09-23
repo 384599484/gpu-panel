@@ -1,0 +1,15 @@
+[Unit]
+Description=GPU Panel Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/etc/gpu-panel
+ExecStart=/usr/local/bin/gpu-panel-server -config /etc/gpu-panel/config.json
+Restart=always
+RestartSec=3
+LimitNOFILE=8192
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>矿机监控面板</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">矿机监控面板</div>
+  <div class="stats" id="stats"></div>
+  <div class="conn" id="conn"><span class="dot"></span><span id="conn-text">连接中…</span></div>
+</header>
+
+<div class="alerts" id="alerts"></div>
+<main class="grid" id="grid"></main>
+<p class="empty" id="empty" hidden>还没有矿机接入。在矿机上启动 agent 后数据会自动出现。</p>
+
+<template id="tpl-machine">
+  <section class="machine">
+    <div class="m-head">
+      <div class="m-title">
+        <span class="status"></span>
+        <span class="hostname"></span>
+        <span class="ip"></span>
+      </div>
+      <div class="m-meta"><span class="uptime"></span><span class="seen"></span></div>
+    </div>
+    <div class="host">
+      <div class="metric">
+        <div class="metric-top"><span>CPU</span><span class="cpu-val"></span></div>
+        <div class="bar"><i class="cpu-bar"></i></div>
+      </div>
+      <div class="metric">
+        <div class="metric-top"><span>内存</span><span class="mem-val"></span></div>
+        <div class="bar"><i class="mem-bar"></i></div>
+      </div>
+      <div class="host-line">
+        <span class="load"></span><span class="net"></span><span class="disk"></span>
+      </div>
+    </div>
+    <div class="gpus"></div>
+  </section>
+</template>
+
+<template id="tpl-gpu">
+  <div class="gpu">
+    <div class="g-head">
+      <span class="g-name"></span>
+      <span class="g-temp"></span>
+    </div>
+    <div class="g-util">
+      <span class="g-util-val"></span>
+      <div class="bar"><i class="util-bar"></i></div>
+    </div>
+    <div class="g-row">
+      <span class="g-mem"></span>
+      <div class="bar thin"><i class="mem-bar"></i></div>
+    </div>
+    <div class="g-row">
+      <span class="g-power"></span>
+      <span class="g-fan"></span>
+    </div>
+    <canvas class="spark" height="46"></canvas>
+    <div class="spark-legend"><span class="lg-util">利用率</span><span class="lg-temp">温度</span></div>
+  </div>
+</template>
+
+<script src="/app.js"></script>
+</body>
+</html>

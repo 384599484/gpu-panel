@@ -1,0 +1,14 @@
+[Unit]
+Description=GPU Panel Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/gpu-panel-agent -config /etc/gpu-panel/agent.json
+Restart=always
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

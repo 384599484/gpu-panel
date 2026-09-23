@@ -1,0 +1,8 @@
+{
+  "server": "ws://1.2.3.4:8080/ws/agent",
+  "token": "与服务端 token 保持一致",
+  "agent_id": "",
+  "interval_ms": 2000,
+  "mock": false,
+  "mock_gpus": 4
+}
