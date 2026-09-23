@@ -12,5 +12,13 @@
   "history": {
     "interval_sec": 5,
     "retention_points": 720
+  },
+  "notify": {
+    "enabled": true,
+    "wecom_webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=换成你的机器人key",
+    "levels": ["crit", "warn"],
+    "cooldown_sec": 600,
+    "recovery": true,
+    "timeout_sec": 10
   }
 }

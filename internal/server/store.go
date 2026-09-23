@@ -67,9 +67,9 @@ type machineState struct {
 
 // Store 保存所有机器的最新状态与历史序列
 type Store struct {
-	mu       sync.RWMutex
-	cfg      *Config
-	machines map[string]*machineState
+	mu         sync.RWMutex
+	cfg        *Config
+	machines   map[string]*machineState
 	lastSample time.Time
 }
 

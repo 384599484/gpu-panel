@@ -16,14 +16,14 @@ import (
 const agentVersion = "1.0.0"
 
 type Config struct {
-	Server    string `json:"server"`     // ws://<公网IP>:8080/ws/agent
-	Token     string `json:"token"`
-	AgentID   string `json:"agent_id"`   // 留空则用主机名
-	IntervalMS int   `json:"interval_ms"`
-	Mock      bool   `json:"mock"`       // 本地联调用：生成假 GPU 数据
-	MockGPUs  int    `json:"mock_gpus"`
-	NvidiaSmi string `json:"nvidia_smi"` // nvidia-smi 路径，留空则用 PATH 中的
-	Path      string `json:"-"`
+	Server     string `json:"server"` // ws://<公网IP>:8080/ws/agent
+	Token      string `json:"token"`
+	AgentID    string `json:"agent_id"` // 留空则用主机名
+	IntervalMS int    `json:"interval_ms"`
+	Mock       bool   `json:"mock"` // 本地联调用：生成假 GPU 数据
+	MockGPUs   int    `json:"mock_gpus"`
+	NvidiaSmi  string `json:"nvidia_smi"` // nvidia-smi 路径，留空则用 PATH 中的
+	Path       string `json:"-"`
 }
 
 func DefaultConfig() *Config {
@@ -204,7 +204,7 @@ func mockGPUs(n int) []shared.GPU {
 	return out
 }
 
-func clamp(v float64) float64   { return clampRange(v, 90, 100) }
+func clamp(v float64) float64     { return clampRange(v, 90, 100) }
 func clampTemp(v float64) float64 { return clampRange(v, 50, 85) }
 
 func clampRange(v, lo, hi float64) float64 {

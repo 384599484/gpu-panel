@@ -8,14 +8,20 @@ import (
 )
 
 type Server struct {
-	cfg   *Config
-	store *Store
-	hub   *Hub
+	cfg    *Config
+	store  *Store
+	hub    *Hub
+	notify *Notifier
 }
 
 func New(cfg *Config) *Server {
 	store := NewStore(cfg)
-	return &Server{cfg: cfg, store: store, hub: NewHub(cfg, store)}
+	return &Server{cfg: cfg, store: store, hub: NewHub(cfg, store), notify: NewNotifier(cfg)}
+}
+
+// NotifyTest 发送一条企业微信自检消息
+func (s *Server) NotifyTest() error {
+	return s.notify.Test()
 }
 
 func (s *Server) Handler() http.Handler {
@@ -56,6 +62,7 @@ func (s *Server) Run() error {
 	go func() {
 		for t := range ticker.C {
 			s.store.Tick(t)
+			s.notify.Observe(s.store.Alerts())
 			s.hub.Broadcast()
 		}
 	}()
@@ -67,6 +74,7 @@ func (s *Server) Run() error {
 	} else {
 		log.Printf("[服务端] 面板未启用认证，建议配置 panel_user / panel_pass")
 	}
+	log.Printf("[服务端] 企业微信推送：%s", s.notify.Status())
 
 	srv := &http.Server{
 		Addr:              s.cfg.Listen,

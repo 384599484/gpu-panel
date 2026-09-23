@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	writeWait      = 10 * time.Second
+	writeWait       = 10 * time.Second
 	pushMinInterval = 900 * time.Millisecond
 )
 
@@ -23,8 +23,8 @@ type viewer struct {
 
 // Hub 管理 agent 长连接与浏览器订阅
 type Hub struct {
-	store   *Store
-	cfg     *Config
+	store    *Store
+	cfg      *Config
 	upgrader websocket.Upgrader
 
 	mu       sync.Mutex

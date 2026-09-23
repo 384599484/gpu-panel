@@ -10,6 +10,7 @@ Agent 主动连出，矿机不需要开放任何入站端口。
 - **主机为辅**：CPU、内存、磁盘、网络速率、负载、运行时长
 - **实时 + 历史**：WebSocket 秒级刷新，服务端内存环形缓冲保存趋势（默认 5s 一点 × 720 点 ≈ 1 小时）
 - **告警**：矿机离线、显卡高温、掉卡（显卡数量减少）、可选长时间低利用率（疑似停挖）
+- **企业微信推送**：告警触发与恢复均推送到群机器人，带冷却去重，不刷屏
 - **资源占用低**：服务端常驻内存约 10–20MB，Agent 约 8–15MB
 
 ## 架构
@@ -87,8 +88,31 @@ GPU_AGENT_SERVER=ws://127.0.0.1:8080/ws/agent GPU_AGENT_TOKEN=<token> \
 | `alerts.gpu_idle_after_sec` | 600 | 低利用率持续时间阈值 |
 | `history.interval_sec` | 5 | 历史采样间隔 |
 | `history.retention_points` | 720 | 每个序列保留点数 |
+| `notify.enabled` | true | 企业微信推送总开关 |
+| `notify.wecom_webhook` | 空 | 群机器人 Webhook 地址，留空则不推送 |
+| `notify.levels` | crit / warn | 推送哪些级别的告警 |
+| `notify.cooldown_sec` | 600 | 同一告警的推送冷却时间 |
+| `notify.recovery` | true | 告警恢复时是否推送 |
+| `notify.timeout_sec` | 10 | 单次推送超时 |
 
-环境变量可覆盖：`GPU_PANEL_TOKEN`、`GPU_PANEL_LISTEN`、`GPU_PANEL_USER`、`GPU_PANEL_PASS`。
+环境变量可覆盖：`GPU_PANEL_TOKEN`、`GPU_PANEL_LISTEN`、`GPU_PANEL_USER`、`GPU_PANEL_PASS`、`GPU_PANEL_WECOM_WEBHOOK`。
+
+### 企业微信推送
+
+1. 在企业微信群 → 群设置 → 群机器人 → 添加机器人，复制 Webhook 地址
+2. 填进 `config.json` 的 `notify.wecom_webhook`
+3. 自检（会往群里发一条测试消息，然后退出）：
+
+```bash
+gpu-panel-server -config /etc/gpu-panel/config.json -test-notify
+```
+
+推送行为：
+
+- 告警**首次出现**时推送一次，持续期间不重复（按 `告警类型|机器|显卡` 去重）
+- 同一告警在 `cooldown_sec` 内反复出现只推一次，避免抖动刷屏
+- 告警**消失**时推送恢复消息（矿机离线导致的 GPU 告警消失不算恢复，不推送）
+- 群机器人限流 20 条/分钟，推送串行间隔 1 秒；发送失败只记日志，不影响监控
 
 ### Agent `agent.json`
 

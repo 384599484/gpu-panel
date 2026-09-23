@@ -21,14 +21,25 @@ type HistoryConfig struct {
 	RetentionPoints int `json:"retention_points"` // 每个序列保留的点数
 }
 
+// NotifyConfig 企业微信群机器人推送
+type NotifyConfig struct {
+	Enabled     bool     `json:"enabled"`       // 总开关，webhook 为空时自动失效
+	Webhook     string   `json:"wecom_webhook"` // https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
+	Levels      []string `json:"levels"`        // 推送级别：crit / warn
+	CooldownSec int      `json:"cooldown_sec"`  // 同一告警的推送冷却，避免刷屏
+	Recovery    bool     `json:"recovery"`      // 告警恢复时是否推送
+	TimeoutSec  int      `json:"timeout_sec"`   // 单次推送超时
+}
+
 type Config struct {
-	Listen    string        `json:"listen"`
-	Token     string        `json:"token"`      // agent 接入令牌
-	PanelUser string        `json:"panel_user"` // 面板 Basic 认证，留空则不启用
-	PanelPass string        `json:"panel_pass"`
-	Alerts    AlertConfig   `json:"alerts"`
-	History   HistoryConfig `json:"history"`
-	ConfigPath string       `json:"-"`
+	Listen     string        `json:"listen"`
+	Token      string        `json:"token"`      // agent 接入令牌
+	PanelUser  string        `json:"panel_user"` // 面板 Basic 认证，留空则不启用
+	PanelPass  string        `json:"panel_pass"`
+	Alerts     AlertConfig   `json:"alerts"`
+	History    HistoryConfig `json:"history"`
+	Notify     NotifyConfig  `json:"notify"`
+	ConfigPath string        `json:"-"`
 }
 
 func DefaultConfig() *Config {
@@ -43,6 +54,13 @@ func DefaultConfig() *Config {
 		History: HistoryConfig{
 			IntervalSec:     5,
 			RetentionPoints: 720, // 5s * 720 = 1 小时
+		},
+		Notify: NotifyConfig{
+			Enabled:     true,
+			Levels:      []string{"crit", "warn"},
+			CooldownSec: 600,
+			Recovery:    true,
+			TimeoutSec:  10,
 		},
 	}
 }
@@ -87,6 +105,15 @@ func LoadConfig(path string) (*Config, error) {
 	if cfg.History.RetentionPoints <= 0 {
 		cfg.History.RetentionPoints = 720
 	}
+	if len(cfg.Notify.Levels) == 0 {
+		cfg.Notify.Levels = []string{"crit", "warn"}
+	}
+	if cfg.Notify.CooldownSec <= 0 {
+		cfg.Notify.CooldownSec = 600
+	}
+	if cfg.Notify.TimeoutSec <= 0 {
+		cfg.Notify.TimeoutSec = 10
+	}
 
 	if cfg.Token == "" {
 		cfg.Token = randomToken()
@@ -108,6 +135,10 @@ func applyEnv(c *Config) {
 	}
 	if v := os.Getenv("GPU_PANEL_PASS"); v != "" {
 		c.PanelPass = v
+	}
+	if v := os.Getenv("GPU_PANEL_WECOM_WEBHOOK"); v != "" {
+		c.Notify.Webhook = v
+		c.Notify.Enabled = true
 	}
 }
 

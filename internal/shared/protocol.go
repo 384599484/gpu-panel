@@ -83,6 +83,7 @@ type Alert struct {
 	Level    string `json:"level"`
 	AgentID  string `json:"agent_id"`
 	Hostname string `json:"hostname"`
+	IP       string `json:"ip"`
 	GPU      int    `json:"gpu"` // 与机器无关的告警为 -1
 	Message  string `json:"message"`
 	Since    int64  `json:"since"`
@@ -90,7 +91,7 @@ type Alert struct {
 
 // PanelState 推送给浏览器面板的全量状态
 type PanelState struct {
-	Now      int64        `json:"now"`
+	Now      int64         `json:"now"`
 	Machines []MachineView `json:"machines"`
-	Alerts   []Alert      `json:"alerts"`
+	Alerts   []Alert       `json:"alerts"`
 }
