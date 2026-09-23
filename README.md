@@ -83,7 +83,7 @@ GPU_AGENT_SERVER=ws://127.0.0.1:8080/ws/agent GPU_AGENT_TOKEN=<token> \
 | `token` | 随机生成 | Agent 接入令牌，必改 |
 | `panel_user` / `panel_pass` | 空 | 面板 Basic 认证，留空则不启用 |
 | `alerts.offline_after_sec` | 30 | 超过该时间未上报判定离线 |
-| `alerts.gpu_temp_threshold` | 88 | GPU 温度告警阈值（°C） |
+| `alerts.gpu_temp_threshold` | 80 | GPU 温度告警阈值（°C），超阈值+7 升级为严重 |
 | `alerts.gpu_idle_threshold` | 0 | 利用率低于该值告警，0 关闭 |
 | `alerts.gpu_idle_after_sec` | 600 | 低利用率持续时间阈值 |
 | `history.interval_sec` | 5 | 历史采样间隔 |

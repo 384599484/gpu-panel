@@ -5,7 +5,7 @@
   "panel_pass": "",
   "alerts": {
     "offline_after_sec": 30,
-    "gpu_temp_threshold": 88,
+    "gpu_temp_threshold": 80,
     "gpu_idle_threshold": 0,
     "gpu_idle_after_sec": 600
   },

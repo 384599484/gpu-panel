@@ -47,7 +47,7 @@ func DefaultConfig() *Config {
 		Listen: ":8080",
 		Alerts: AlertConfig{
 			OfflineAfterSec:  30,
-			GPUTempThreshold: 88,
+			GPUTempThreshold: 80,
 			GPUIdleThreshold: 0,
 			GPUIdleAfterSec:  600,
 		},
@@ -97,7 +97,7 @@ func LoadConfig(path string) (*Config, error) {
 		cfg.Alerts.OfflineAfterSec = 30
 	}
 	if cfg.Alerts.GPUTempThreshold <= 0 {
-		cfg.Alerts.GPUTempThreshold = 88
+		cfg.Alerts.GPUTempThreshold = 80
 	}
 	if cfg.History.IntervalSec <= 0 {
 		cfg.History.IntervalSec = 5
